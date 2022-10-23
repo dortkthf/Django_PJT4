@@ -97,9 +97,13 @@ def search(request):
     elif search_options == 'title':
         reviews = Review.objects.filter(title__contains=search)
     elif search_options == 'user':
-        user = User.objects.get(username=search).id
-        reviews = Review.objects.filter(user_id=user)
-    page = request.GET.get('page', '1')
+        try:
+            users = User.objects.get(username=search).id
+            reviews = Review.objects.filter(user=users)
+        except:
+            users = '1q2w3e4r!@!$2242@!!!%#'
+            reviews = Review.objects.filter(title__contains=users)
+    page = request.GET.get('page')
     paginator = Paginator(reviews, 3)
     page_obj = paginator.get_page(page)
 
