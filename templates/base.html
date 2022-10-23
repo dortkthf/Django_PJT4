@@ -55,13 +55,13 @@
                 </li>
               {% endif %}
             </ul>
-            <form class="d-flex" role="search" action='{% url 'articles:search' %}'>
+            <form class="d-flex gap-1" role="search" action='{% url 'articles:search' %}'>
               <select class="form-select" aria-label="Default select example" name='Search_option'>
-                <option value="movie_name__contains">영화제목</option>
-                <option value="title__contains">리뷰제목</option>
-                {% comment %} <option value="user__contains">작성자</option> {% endcomment %}
+                <option value="movie_name">영화제목</option>
+                <option value="title">리뷰제목</option>
+                <option value="user">작성자</option>
               </select>
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name='search'>
+              <input class="form-control" type="search" placeholder="Search" aria-label="Search" name='search'>
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
           </div>

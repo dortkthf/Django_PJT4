@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import CommentForm, ReviewForm
 from .models import Review, Comment
+from accounts.models import User
 from django.core.paginator import Paginator
 
 # Create your views here.
@@ -8,13 +9,14 @@ def index(request):
     reviews = Review.objects.order_by('-pk')
 
     # 페이지네이션
-    page = request.GET.get('page', '1')
+    page = request.GET.get('page')
     paginator = Paginator(reviews, 3)
     page_obj = paginator.get_page(page)
 
     context = {
         'reviews' : reviews,
         'question_list': page_obj,
+        'paginator' : paginator
     }
     
     return render(request, 'articles/index.html', context)
@@ -89,12 +91,14 @@ def search(request):
     search_options = request.GET.get('Search_option')
 
     
-    if search_options == 'movie_name__contains':
+    if search_options == 'movie_name':
         reviews = Review.objects.filter(movie_name__contains=search)
         
-    elif search_options == 'title__contains':
+    elif search_options == 'title':
         reviews = Review.objects.filter(title__contains=search)
-
+    elif search_options == 'user':
+        user = User.objects.get(username=search).id
+        reviews = Review.objects.filter(user_id=user)
     page = request.GET.get('page', '1')
     paginator = Paginator(reviews, 3)
     page_obj = paginator.get_page(page)
@@ -102,7 +106,8 @@ def search(request):
     context = {
         'question_list': page_obj,
         'search_options' : search_options,
-        'search' : search
+        'search' : search,
+        'paginator' : paginator
     }
 
     return render(request, 'articles/search.html' ,context)
